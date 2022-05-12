@@ -1,2 +1,2 @@
 # shop-shop
-Demo para validar aptitudes de Java y Spring Boot.
+Proyecto para validar aptitudes backend en Java y Spring Boot.
