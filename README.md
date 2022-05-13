@@ -13,7 +13,7 @@ Tecnologías Base:
 - BD: Postgres.
 - Arquitectura: Orientada a servicios
 
-Tiene como objetivo validar competencias para el desarrollo de backend en el stack propuesto.
+Tiene como objetivo validar competencias para el desarrollo backend en el stack Java.
 
 
 
