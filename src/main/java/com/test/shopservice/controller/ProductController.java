@@ -3,7 +3,6 @@ package com.test.shopservice.controller;
 import com.test.shopservice.entity.Product;
 import com.test.shopservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -38,14 +37,14 @@ public class ProductController {
         Product product = productService.getProduct(id);
 
         if (product == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
         return ResponseEntity.ok(product);
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product, BindingResult result) {
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product, BindingResult result) {
 
         if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -56,11 +55,19 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Product> updateProduct(@Valid @PathVariable("id") Integer id, @RequestBody Product product) {
+    public ResponseEntity<Product> updateProduct( @PathVariable("id") Integer id, @Valid @RequestBody Product product, BindingResult result) {
+
+        if (result.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
 
         product.setId(id);
-        Product updatedProduct = productService.updateProduct(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(updatedProduct);
+        Product setProduct = productService.updateProduct(product);
+
+        if(setProduct == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(setProduct);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -69,8 +76,9 @@ public class ProductController {
         boolean removedProduct = productService.deleteProduct(id);
 
         if (!removedProduct) {
-            return new ResponseEntity<>("No existe", HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>("Eliminado", HttpStatus.OK);
+
+        return ResponseEntity.ok("Eliminado Satisfactoriamente");
     }
 }
