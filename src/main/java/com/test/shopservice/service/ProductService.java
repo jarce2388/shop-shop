@@ -37,11 +37,11 @@ public class ProductService {
             return null;
         }
 
-        Product getProduct = productDB.get();
-        getProduct.setName(getProduct.getName());
-        getProduct.setPrice(getProduct.getPrice());
+        Product newProduct = productDB.get();
+        newProduct.setName(product.getName());
+        newProduct.setPrice(product.getPrice());
 
-        return this.repository.save(getProduct);
+        return this.repository.save(newProduct);
     }
 
     public Boolean deleteProduct(Integer id) {
