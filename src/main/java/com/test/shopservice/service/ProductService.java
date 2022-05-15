@@ -2,7 +2,6 @@ package com.test.shopservice.service;
 
 import com.test.shopservice.entity.Product;
 import com.test.shopservice.repository.ProductRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,16 +1,20 @@
 package com.test.shopservice.controller;
 
 import com.test.shopservice.entity.Product;
+import com.test.shopservice.exception.CustomBadRequestException;
+import com.test.shopservice.exception.CustomNotFoundException;
 import com.test.shopservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/products")
@@ -18,6 +22,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private static final String PRODUCT_NOT_FOUND = "Producto no encontrado";
 
     @GetMapping
     public ResponseEntity<List<Product>> listProduct() {
@@ -37,7 +42,7 @@ public class ProductController {
         Product product = productService.getProduct(id);
 
         if (product == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new CustomNotFoundException(PRODUCT_NOT_FOUND);
         }
 
         return ResponseEntity.ok(product);
@@ -47,7 +52,7 @@ public class ProductController {
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product, BindingResult result) {
 
         if (result.hasErrors()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new CustomNotFoundException(toStringMessage(result));
         }
 
         Product newProduct = productService.createProduct(product);
@@ -55,19 +60,21 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Product> updateProduct( @PathVariable("id") Integer id, @Valid @RequestBody Product product, BindingResult result) {
+
+    public ResponseEntity<Product> updateProduct(@PathVariable("id") Integer id, @Valid @RequestBody Product product, BindingResult result) {
 
         if (result.hasErrors()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new CustomBadRequestException(this.toStringMessage(result));
         }
 
         product.setId(id);
-        Product setProduct = productService.updateProduct(product);
+        Product updProduct = productService.updateProduct(product);
 
-        if(setProduct == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        if (updProduct == null) {
+            throw new CustomNotFoundException(PRODUCT_NOT_FOUND);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(setProduct);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(updProduct);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -76,9 +83,21 @@ public class ProductController {
         boolean removedProduct = productService.deleteProduct(id);
 
         if (!removedProduct) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new CustomNotFoundException(PRODUCT_NOT_FOUND);
         }
 
-        return ResponseEntity.ok("Eliminado Satisfactoriamente");
+        return ResponseEntity.ok("Eliminado");
+    }
+
+    private String toStringMessage(BindingResult result) {
+
+        List<Map<String, String>> errors = result.getFieldErrors().stream()
+                .map(err -> {
+                    Map<String, String> error = new HashMap<>();
+                    error.put(err.getField(), err.getDefaultMessage());
+                    return error;
+                }).collect(Collectors.toList());
+
+        return errors.toString();
     }
 }

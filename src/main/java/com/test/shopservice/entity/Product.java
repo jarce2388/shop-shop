@@ -13,18 +13,20 @@ import javax.validation.constraints.Positive;
 @Entity
 @Table(name = "producto")
 @Data
-@AllArgsConstructor @NoArgsConstructor @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotEmpty(message = "El nombre no debe ser vacío")
+    @NotEmpty(message = "El campo nombre no debe ser vacío")
     private String name;
 
-    @Positive(message = "El precio debe ser mayor que 0")
-    @NotNull(message = "El precio no debe estar vacío")
+    @Positive(message = "El campo precio debe ser mayor que 0")
+    @NotNull(message = "El campo precio no debe estar vacío")
     private Float price;
 
 }

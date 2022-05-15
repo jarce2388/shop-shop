@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShopController {
 
     @GetMapping
-    public String getWelcome(){
+    public String getWelcome() {
         return "*** Bienvenido a Shop-Shop ***";
     }
 }
