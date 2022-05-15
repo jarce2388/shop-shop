@@ -2,11 +2,11 @@ package com.test.shopservice.service;
 
 import com.test.shopservice.entity.Product;
 import com.test.shopservice.repository.ProductRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +19,7 @@ public class ProductService {
     }
 
     public Product getProduct(Integer id) {
+
         return this.repository.findById(id).orElse(null);
     }
 
@@ -29,24 +30,28 @@ public class ProductService {
 
     public Product updateProduct(Product product) {
 
-        Product productDB = this.repository.getById(product.getId());
+        Optional<Product> productDB = this.repository.findById(product.getId());
 
-        productDB.setName(product.getName());
-        productDB.setPrice(product.getPrice());
+        if (productDB.isEmpty()) {
+            return null;
+        }
 
-        return this.repository.save(productDB);
+        Product newProduct = productDB.get();
+        newProduct.setName(product.getName());
+        newProduct.setPrice(product.getPrice());
+
+        return this.repository.save(newProduct);
     }
 
-    public boolean deleteProduct(Integer id) {
+    public Boolean deleteProduct(Integer id) {
 
-        Product product = this.repository.getById(id);
+        Optional<Product> product = this.repository.findById(id);
 
-        if( product == null ){
+        if (product.isEmpty()) {
             return false;
         }
 
-        this.repository.delete(product);
-
+        this.repository.delete(product.get());
         return true;
     }
 
