@@ -12,14 +12,6 @@ import java.io.StringWriter;
 
 public class CustomControllerAdvice {
 
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<ErrorMessage> handleNullPointException(Exception e) {
-
-        HttpStatus httpStatus = HttpStatus.NOT_FOUND;
-
-        return new ResponseEntity<>(new ErrorMessage(httpStatus, e.getMessage(), backendMessage(e)), httpStatus);
-    }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleInternalExceptions(Exception e) {
 
