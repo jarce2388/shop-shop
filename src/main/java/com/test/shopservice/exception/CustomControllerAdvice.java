@@ -17,11 +17,11 @@ public class CustomControllerAdvice {
 
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
 
-        return new ResponseEntity<>(new ErrorMessage(httpStatus, e.getMessage()), httpStatus);
+        return new ResponseEntity<>(new ErrorMessage(httpStatus, e.getMessage(), backendMessage(e)), httpStatus);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessage> internalExceptions(Exception e) {
+    public ResponseEntity<ErrorMessage> handleInternalExceptions(Exception e) {
 
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -29,7 +29,7 @@ public class CustomControllerAdvice {
     }
 
     @ExceptionHandler(CustomBadRequestException.class)
-    public ResponseEntity<ErrorMessage> badResquestExceptions(Exception e) {
+    public ResponseEntity<ErrorMessage> handleBadResquestExceptions(Exception e) {
 
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
@@ -37,7 +37,7 @@ public class CustomControllerAdvice {
     }
 
     @ExceptionHandler(CustomNotFoundException.class)
-    public ResponseEntity<ErrorMessage> notFoundExceptions(Exception e) {
+    public ResponseEntity<ErrorMessage> handleNotFoundExceptions(Exception e) {
 
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
 
