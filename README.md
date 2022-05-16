@@ -10,12 +10,13 @@ Solución creada con el objetivo de implementar funcionalidades básicas de una ti
 NOTA: Este proyecto tiene como objetivo fundamental, validar competencias para el desarrollo backend en el stack Java.
 
 
-Tecnologías:
-- Lenguaje: Java.
-- Framework: Spring, Spring Boot.
-- BD: Postgres.
+Stack:
 - Arquitectura: Orientada a servicios.
+- Lenguaje: Java.
+- Framework: Spring Boot.
+- BD: Postgres.
 - Pruebas:JUnit, Mockito.
+- Logs: Log4j2.
 
 
 
