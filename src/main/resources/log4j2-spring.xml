@@ -1,0 +1,41 @@
+<Configuration status="warn">
+    <Properties>
+        <Property name="basePath">src/main/resources/logs</Property>
+    </Properties>
+    <Appenders>
+        <File name="product-log" fileName="${basePath}/product.log">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %c{1} : %msg%n
+                </pattern>
+            </PatternLayout>
+            <JSONLayout compact="true" eventEol="true"/>
+        </File>
+        <File name="client-log" fileName="${basePath}/client.log">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %c{1} : %msg%n
+                </pattern>
+            </PatternLayout>
+            <JSONLayout compact="true" eventEol="true"/>
+        </File>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %c{1} : %msg%n
+                </pattern>
+            </PatternLayout>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="product-log" level="ERROR" additivity="false">
+            <appender-ref ref="product-log"/>
+        </Logger>
+        <Logger name="client-log" level="ERROR" additivity="false">
+            <appender-ref ref="client-log"/>
+        </Logger>
+        <Root level="error" additivity="false">
+            <AppenderRef ref="console"/>
+        </Root>
+    </Loggers>
+</Configuration>

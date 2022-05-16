@@ -12,8 +12,8 @@ public class ErrorMessage {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date date;
     private String httpStatus;
-    private String message;
     private int code;
+    private String message;
     private String backendMessage;
 
 

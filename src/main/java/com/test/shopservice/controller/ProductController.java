@@ -5,6 +5,10 @@ import com.test.shopservice.exception.CustomBadRequestException;
 import com.test.shopservice.exception.CustomNotFoundException;
 import com.test.shopservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -19,10 +23,17 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/products")
 @RequiredArgsConstructor
+@Log4j2
 public class ProductController {
 
     private final ProductService productService;
-    private static final String PRODUCT_NOT_FOUND = "Producto no encontrado";
+    private static final String MESSAGE_NOT_FOUND = "Producto no encontrado";
+
+    private ErrorLog errorLog = (httpStatus, httpMethod, message) -> {
+        String msg = httpMethod.name() + " : " + httpStatus.name() + " : " + httpStatus.value() + " : " + message;
+        Logger logger = LogManager.getLogger("product-log");
+        logger.error(msg);
+    };
 
     @GetMapping
     public ResponseEntity<List<Product>> listProduct() {
@@ -30,7 +41,8 @@ public class ProductController {
         List<Product> listProduct = productService.listProduct();
 
         if (listProduct == null) {
-            return ResponseEntity.notFound().build();
+            errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.GET, MESSAGE_NOT_FOUND);
+            throw new CustomNotFoundException(MESSAGE_NOT_FOUND);
         }
 
         return ResponseEntity.ok(listProduct);
@@ -42,7 +54,8 @@ public class ProductController {
         Product product = productService.getProduct(id);
 
         if (product == null) {
-            throw new CustomNotFoundException(PRODUCT_NOT_FOUND);
+            errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.GET, MESSAGE_NOT_FOUND);
+            throw new CustomNotFoundException(MESSAGE_NOT_FOUND);
         }
 
         return ResponseEntity.ok(product);
@@ -52,7 +65,8 @@ public class ProductController {
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product, BindingResult result) {
 
         if (result.hasErrors()) {
-            throw new CustomNotFoundException(toStringMessage(result));
+            errorLog.register(HttpStatus.BAD_REQUEST, HttpMethod.POST, this.toStringMessage(result));
+            throw new CustomNotFoundException(this.toStringMessage(result));
         }
 
         Product newProduct = productService.createProduct(product);
@@ -64,6 +78,7 @@ public class ProductController {
     public ResponseEntity<Product> updateProduct(@PathVariable("id") Integer id, @Valid @RequestBody Product product, BindingResult result) {
 
         if (result.hasErrors()) {
+            errorLog.register(HttpStatus.BAD_REQUEST, HttpMethod.PUT, this.toStringMessage(result));
             throw new CustomBadRequestException(this.toStringMessage(result));
         }
 
@@ -71,7 +86,8 @@ public class ProductController {
         Product updProduct = productService.updateProduct(product);
 
         if (updProduct == null) {
-            throw new CustomNotFoundException(PRODUCT_NOT_FOUND);
+            errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.PUT, MESSAGE_NOT_FOUND);
+            throw new CustomNotFoundException(MESSAGE_NOT_FOUND);
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(updProduct);
@@ -83,7 +99,8 @@ public class ProductController {
         boolean removedProduct = productService.deleteProduct(id);
 
         if (!removedProduct) {
-            throw new CustomNotFoundException(PRODUCT_NOT_FOUND);
+            errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.DELETE, MESSAGE_NOT_FOUND);
+            throw new CustomNotFoundException(MESSAGE_NOT_FOUND);
         }
 
         return ResponseEntity.ok("Eliminado");
@@ -100,4 +117,5 @@ public class ProductController {
 
         return errors.toString();
     }
+
 }

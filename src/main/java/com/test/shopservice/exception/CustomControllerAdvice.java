@@ -16,27 +16,24 @@ public class CustomControllerAdvice {
     public ResponseEntity<ErrorMessage> handleInternalExceptions(Exception e) {
 
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-
-        return new ResponseEntity<>(new ErrorMessage(httpStatus, e.getMessage(), backendMessage(e)), httpStatus);
+        return new ResponseEntity<>(new ErrorMessage(httpStatus, e.getMessage(), formatBackendMessage(e)), httpStatus);
     }
 
     @ExceptionHandler(CustomBadRequestException.class)
     public ResponseEntity<ErrorMessage> handleBadResquestExceptions(Exception e) {
 
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-
-        return new ResponseEntity<>(new ErrorMessage(httpStatus, e.getMessage(), backendMessage(e)), httpStatus);
+        return new ResponseEntity<>(new ErrorMessage(httpStatus, e.getMessage(), formatBackendMessage(e)), httpStatus);
     }
 
     @ExceptionHandler(CustomNotFoundException.class)
     public ResponseEntity<ErrorMessage> handleNotFoundExceptions(Exception e) {
 
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
-
-        return new ResponseEntity<>(new ErrorMessage(httpStatus, e.getMessage(), backendMessage(e)), httpStatus);
+        return new ResponseEntity<>(new ErrorMessage(httpStatus, e.getMessage(), formatBackendMessage(e)), httpStatus);
     }
 
-    private String backendMessage(Exception e) {
+    private String formatBackendMessage(Exception e) {
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);

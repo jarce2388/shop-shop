@@ -18,4 +18,5 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-          default_schema: shop
+        default_schema: shop
+
