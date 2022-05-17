@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     private final ProductService productService;
-    private static final String MESSAGE_NOT_FOUND = "Producto no encontrado";
+    private final String MESSAGE_NOT_FOUND = "Producto no encontrado";
 
-    private ErrorLog errorLog = (httpStatus, httpMethod, message) -> {
+    private final ErrorLog errorLog = (httpStatus, httpMethod, message) -> {
         String msg = httpMethod.name() + " : " + httpStatus.name() + " : " + httpStatus.value() + " : " + message;
         Logger logger = LogManager.getLogger("product-log");
         logger.error(msg);
@@ -66,7 +66,7 @@ public class ProductController {
 
         if (result.hasErrors()) {
             errorLog.register(HttpStatus.BAD_REQUEST, HttpMethod.POST, this.toStringMessage(result));
-            throw new CustomNotFoundException(this.toStringMessage(result));
+            throw new CustomBadRequestException(this.toStringMessage(result));
         }
 
         Product newProduct = productService.createProduct(product);
