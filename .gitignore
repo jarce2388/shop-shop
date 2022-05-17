@@ -37,3 +37,5 @@ mvnw.cmd
 mvnw
 .mvn
 .gitignore
+sonar-project.properties
+.scannerwork/.sonar_lock
