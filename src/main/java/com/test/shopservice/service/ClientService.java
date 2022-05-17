@@ -13,16 +13,17 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
 
-    public Client getClient(Integer id){
+    public Client getClient(Integer id) {
 
         return this.clientRepository.findById(id).orElse(null);
     }
 
-    public List<Client> listProduct(){
+    public List<Client> listProduct() {
 
         return this.clientRepository.findAll();
     }
-    public Client createClient(Client client){
+
+    public Client createClient(Client client) {
 
         return this.clientRepository.save(client);
     }

@@ -27,9 +27,8 @@ import java.util.stream.Collectors;
 public class ClientController {
 
     private final ClientService clientService;
-    private static final String MESSAGE_NOT_FOUND = "Cliente no encontrado";
 
-    private ErrorLog errorLog = (httpStatus, httpMethod, message) -> {
+    private final ErrorLog errorLog = (httpStatus, httpMethod, message) -> {
         String msg = httpMethod.name() + " : " + httpStatus.name() + " : " + httpStatus.value() + " : " + message;
         Logger logger = LogManager.getLogger("client-log");
         logger.error(msg);
@@ -42,6 +41,7 @@ public class ClientController {
 
         if (client == null) {
 
+            String MESSAGE_NOT_FOUND = "Cliente no encontrado";
             errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.GET, MESSAGE_NOT_FOUND);
             throw new CustomNotFoundException(MESSAGE_NOT_FOUND);
         }
