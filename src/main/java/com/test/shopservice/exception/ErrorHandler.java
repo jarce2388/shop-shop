@@ -10,7 +10,7 @@ import java.io.StringWriter;
 
 @ControllerAdvice
 
-public class CustomControllerAdvice {
+public class ErrorHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleInternalExceptions(Exception e) {
