@@ -1,5 +1,6 @@
 package com.test.shopservice.controller;
 
+import com.test.shopservice.dto.ProductDto;
 import com.test.shopservice.entity.Product;
 import com.test.shopservice.exception.CustomBadRequestException;
 import com.test.shopservice.exception.CustomNotFoundException;
@@ -62,28 +63,28 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product, BindingResult result) {
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDto productDto, BindingResult result) {
 
         if (result.hasErrors()) {
             errorLog.register(HttpStatus.BAD_REQUEST, HttpMethod.POST, this.toStringMessage(result));
             throw new CustomBadRequestException(this.toStringMessage(result));
         }
 
-        Product newProduct = productService.createProduct(product);
+        Product newProduct = productService.createProduct(productDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
     }
 
     @PutMapping(value = "/{id}")
 
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") Integer id, @Valid @RequestBody Product product, BindingResult result) {
+    public ResponseEntity<Product> updateProduct(@PathVariable("id") Integer id, @Valid @RequestBody ProductDto productDto, BindingResult result) {
 
         if (result.hasErrors()) {
             errorLog.register(HttpStatus.BAD_REQUEST, HttpMethod.PUT, this.toStringMessage(result));
             throw new CustomBadRequestException(this.toStringMessage(result));
         }
 
-        product.setId(id);
-        Product updProduct = productService.updateProduct(product);
+        productDto.setId(id);
+        Product updProduct = productService.updateProduct(productDto);
 
         if (updProduct == null) {
             errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.PUT, MESSAGE_NOT_FOUND);

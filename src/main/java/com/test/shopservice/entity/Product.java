@@ -11,11 +11,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 @Entity
-@Table(name = "producto")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name = "product")
 public class Product {
 
     @Id
@@ -25,3 +25,5 @@ public class Product {
     private Float price;
 
 }
+
+
