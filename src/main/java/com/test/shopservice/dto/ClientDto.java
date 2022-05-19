@@ -12,6 +12,7 @@ import javax.validation.constraints.Positive;
 @Builder
 public class ClientDto {
 
+    private Integer id;
     @NotEmpty(message = "El campo NOMBRE no debe ser vacío")
     private String name;
 

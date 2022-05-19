@@ -11,6 +11,7 @@ import javax.validation.constraints.Positive;
 @Builder
 public class ProductDto {
 
+    private Integer id;
     @NotEmpty(message = "El campo nombre no debe ser vacío")
     private String name;
 
