@@ -1,5 +1,6 @@
 package com.test.shopservice.controller;
 
+import com.test.shopservice.dto.ClientDto;
 import com.test.shopservice.entity.Client;
 import com.test.shopservice.exception.CustomBadRequestException;
 import com.test.shopservice.exception.CustomNotFoundException;
@@ -56,7 +57,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<Client> createClient(@Valid @RequestBody Client clientBody, BindingResult result) {
+    public ResponseEntity<Client> createClient(@Valid @RequestBody ClientDto clientDto, BindingResult result) {
 
         if (result.hasErrors()) {
 
@@ -64,8 +65,7 @@ public class ClientController {
             throw new CustomBadRequestException(this.toStringMessage(result));
         }
 
-        Client client = this.clientService.createClient(clientBody);
-        return ResponseEntity.status(HttpStatus.CREATED).body(client);
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.clientService.createClient(clientDto));
 
     }
 

@@ -1,5 +1,6 @@
 package com.test.shopservice;
 
+import com.test.shopservice.dto.ProductDto;
 import com.test.shopservice.entity.Product;
 import com.test.shopservice.repository.ProductRepository;
 import com.test.shopservice.service.ProductService;
@@ -32,6 +33,7 @@ public class ProductServiceTests {
                 .price(Float.parseFloat("23.99"))
                 .build();
 
+
         Mockito.when(productRepository.findById(1))
                 .thenReturn(Optional.of(chicken));
         Mockito.when(productRepository.save(chicken)).thenReturn(chicken);
@@ -47,7 +49,13 @@ public class ProductServiceTests {
     @Test
     public void whenSave_ThenCreateProduct() {
 
-        Product product = productService.createProduct(productService.getProduct(1));
+        ProductDto chicken = ProductDto.builder()
+                .id(1)
+                .name("chicken")
+                .price(Float.parseFloat("23.99"))
+                .build();
+
+        Product product = productService.createProduct(chicken);
         Assertions.assertThat(product).isNotNull();
     }
 

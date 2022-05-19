@@ -1,8 +1,12 @@
 package com.test.shopservice.service;
 
+import com.test.shopservice.dto.ProductDto;
 import com.test.shopservice.entity.Product;
+import com.test.shopservice.exception.CustomNotFoundException;
 import com.test.shopservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +17,9 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository repository;
+    @Autowired
+    private ModelMapper modelMapper;
+
 
     public List<Product> listProduct() {
         return this.repository.findAll();
@@ -23,23 +30,20 @@ public class ProductService {
         return this.repository.findById(id).orElse(null);
     }
 
-    public Product createProduct(Product product) {
+    public Product createProduct(ProductDto productDto) {
 
-        return this.repository.save(product);
+        return this.repository.save(modelMapper.map(productDto,Product.class));
     }
 
-    public Product updateProduct(Product product) {
+    public Product updateProduct(ProductDto productDto) {
 
-        Optional<Product> productDB = this.repository.findById(product.getId());
+        Optional<Product> productDB = this.repository.findById(productDto.getId());
 
         if (productDB.isEmpty()) {
             return null;
         }
 
-        Product newProduct = productDB.get();
-        newProduct.setName(product.getName());
-        newProduct.setPrice(product.getPrice());
-
+        Product newProduct = modelMapper.map(productDto, Product.class);
         return this.repository.save(newProduct);
     }
 
