@@ -45,7 +45,7 @@
         <Logger name="sale-log" level="ERROR" additivity="false">
             <appender-ref ref="sale-log"/>
         </Logger>
-        <Root level="error" additivity="false">
+        <Root level="INFO" additivity="false">
             <AppenderRef ref="console"/>
         </Root>
     </Loggers>
