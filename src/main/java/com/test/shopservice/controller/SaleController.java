@@ -1,12 +1,11 @@
 package com.test.shopservice.controller;
 
-import com.test.shopservice.dto.ClientDto;
-import com.test.shopservice.entity.Client;
+import com.test.shopservice.dto.SaleDto;
+import com.test.shopservice.entity.Sale;
 import com.test.shopservice.exception.CustomBadRequestException;
 import com.test.shopservice.exception.CustomNotFoundException;
-import com.test.shopservice.service.ClientService;
+import com.test.shopservice.service.SaleService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpMethod;
@@ -23,49 +22,45 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@Log4j2
-@RequestMapping(value = "clients")
-public class ClientController {
+@RequestMapping(value = "sales")
+public class SaleController {
 
-    private final ClientService clientService;
+    private final SaleService saleService;
 
     private final ErrorLog errorLog = (httpStatus, httpMethod, message) -> {
         String msg = httpMethod.name() + " : " + httpStatus.name() + " : " + httpStatus.value() + " : " + message;
-        Logger logger = LogManager.getLogger("client-log");
+        Logger logger = LogManager.getLogger("sale-log");
         logger.error(msg);
     };
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Client> getClient(@PathVariable("id") Integer id) {
+    @GetMapping
+    public ResponseEntity<List<SaleDto>> listSale() {
 
-        Client client = this.clientService.getClient(id);
-
-        if (client == null) {
-
-            errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.GET, "Cliente no encontrado");
-            throw new CustomNotFoundException("Cliente no encontrado");
-        }
-
-        return ResponseEntity.ok(client);
+        return ResponseEntity.ok(this.saleService.listSale());
     }
 
-    @GetMapping
-    public ResponseEntity<List<Client>> listCLient() {
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<SaleDto> getSale(@PathVariable("id") Integer id) {
 
-        return ResponseEntity.ok(this.clientService.listProduct());
+        SaleDto sale = this.saleService.getSale(id);
+
+        if (sale == null) {
+            errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.GET, "Id no existe");
+            throw new CustomNotFoundException("Id no existe");
+        }
+
+        return ResponseEntity.ok(sale);
     }
 
     @PostMapping
-    public ResponseEntity<Client> createClient(@Valid @RequestBody ClientDto clientDto, BindingResult result) {
+    public ResponseEntity<Sale> createSale(@Valid @RequestBody SaleDto saleDto, BindingResult result) {
 
         if (result.hasErrors()) {
-
             errorLog.register(HttpStatus.BAD_REQUEST, HttpMethod.POST, this.toStringMessage(result));
             throw new CustomBadRequestException(this.toStringMessage(result));
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.clientService.createClient(clientDto));
-
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.saleService.createSale(saleDto));
     }
 
     private String toStringMessage(BindingResult result) {
@@ -79,5 +74,4 @@ public class ClientController {
 
         return errors.toString();
     }
-
 }

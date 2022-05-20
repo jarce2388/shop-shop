@@ -30,7 +30,7 @@ public class ProductServiceTests {
         Product chicken = Product.builder()
                 .id(1)
                 .name("chicken")
-                .price(Float.parseFloat("23.99"))
+                .price(Double.parseDouble("23.99"))
                 .build();
 
 
@@ -52,7 +52,7 @@ public class ProductServiceTests {
         ProductDto chicken = ProductDto.builder()
                 .id(1)
                 .name("chicken")
-                .price(Float.parseFloat("23.99"))
+                .price(Double.parseDouble("23.99"))
                 .build();
 
         Product product = productService.createProduct(chicken);

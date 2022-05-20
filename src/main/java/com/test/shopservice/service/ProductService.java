@@ -2,7 +2,6 @@ package com.test.shopservice.service;
 
 import com.test.shopservice.dto.ProductDto;
 import com.test.shopservice.entity.Product;
-import com.test.shopservice.exception.CustomNotFoundException;
 import com.test.shopservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -43,8 +42,7 @@ public class ProductService {
             return null;
         }
 
-        Product newProduct = modelMapper.map(productDto, Product.class);
-        return this.repository.save(newProduct);
+        return this.repository.save(modelMapper.map(productDto, Product.class));
     }
 
     public Boolean deleteProduct(Integer id) {

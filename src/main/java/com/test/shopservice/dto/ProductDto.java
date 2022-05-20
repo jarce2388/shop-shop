@@ -17,5 +17,5 @@ public class ProductDto {
 
     @Positive(message = "El campo precio debe ser mayor que 0")
     @NotNull(message = "El campo precio no debe estar vacío")
-    private Float price;
+    private Double price;
 }

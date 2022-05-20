@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     private final ProductService productService;
-    private final String MESSAGE_NOT_FOUND = "Producto no encontrado";
+    public static final String MESSAGE_NOT_FOUND = "Producto no encontrado";
 
     private final ErrorLog errorLog = (httpStatus, httpMethod, message) -> {
         String msg = httpMethod.name() + " : " + httpStatus.name() + " : " + httpStatus.value() + " : " + message;
