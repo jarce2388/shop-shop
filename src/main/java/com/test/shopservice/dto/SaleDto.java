@@ -13,7 +13,6 @@ public class SaleDto {
     @JsonIgnoreProperties({"saleList","phone","email"})
     private Client client;
 
-
     @JsonIgnoreProperties({"sale","hibernateLazyInitializer"})
     private List<SaleDetailDto> detailList;
 

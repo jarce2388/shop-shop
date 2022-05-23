@@ -46,23 +46,22 @@ public class SaleService {
         return  this.toDto(sale.get());
     }
 
-    public Sale createSale(SaleDto salesDto) {
+    public List<SaleDetail> createSale(SaleDto salesDto) {
 
         Sale sale = modelMapper.map(salesDto, Sale.class);
         sale.setDate(LocalDateTime.now());
 
         this.saleRepository.save(sale);
 
-         sale.getDetailList()
+        return sale.getDetailList()
                 .stream()
                 .map(element -> {
                     element.setSale(sale);
                     SaleDetail saleDetail = modelMapper.map(element, SaleDetail.class);
                     this.saleDetailRepository.save(saleDetail);
                     return saleDetail;
-                });
-
-        return sale;
+                })
+                .collect(Collectors.toList());
     }
 
     private SaleDto toDto(Sale sale) {
