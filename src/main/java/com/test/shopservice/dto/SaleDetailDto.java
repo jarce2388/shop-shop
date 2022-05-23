@@ -7,7 +7,8 @@ import lombok.Data;
 @Data
 public class SaleDetailDto {
 
-    @JsonIgnoreProperties("hibernateLazyInitializer")
+    private Integer id;
+    @JsonIgnoreProperties({"hibernateLazyInitializer"})
     private Product product;
 
 

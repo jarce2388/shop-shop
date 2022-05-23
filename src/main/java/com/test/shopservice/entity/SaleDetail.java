@@ -21,11 +21,11 @@ public class SaleDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_product")
-    @JsonIgnoreProperties("hibernateLazyInitializer")
+    @JsonIgnoreProperties({"id","hibernateLazyInitializer"})
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_sale")
-    @JsonIgnoreProperties("detailList")
+    @JsonIgnoreProperties({"id","detailList","hibernateLazyInitializer","client"})
     private Sale sale;
 }
