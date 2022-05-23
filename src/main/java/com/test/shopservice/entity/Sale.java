@@ -23,7 +23,7 @@ public class Sale {
     private Client client;
 
     @OneToMany(mappedBy = "sale")
-    @JsonIgnoreProperties("sale")
+    @JsonIgnoreProperties({"sale","hibernateLazyInitializer"})
     private List<SaleDetail> detailList;
 
 

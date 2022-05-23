@@ -1,7 +1,7 @@
 package com.test.shopservice.controller;
 
 import com.test.shopservice.dto.SaleDto;
-import com.test.shopservice.entity.Sale;
+import com.test.shopservice.entity.SaleDetail;
 import com.test.shopservice.exception.CustomBadRequestException;
 import com.test.shopservice.exception.CustomNotFoundException;
 import com.test.shopservice.service.SaleService;
@@ -53,7 +53,7 @@ public class SaleController {
     }
 
     @PostMapping
-    public ResponseEntity<Sale> createSale(@Valid @RequestBody SaleDto saleDto, BindingResult result) {
+    public ResponseEntity<List<SaleDetail>> createSale(@Valid @RequestBody SaleDto saleDto, BindingResult result) {
 
         if (result.hasErrors()) {
             errorLog.register(HttpStatus.BAD_REQUEST, HttpMethod.POST, this.toStringMessage(result));
