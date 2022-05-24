@@ -2,13 +2,11 @@ package com.test.shopservice.controller;
 
 import com.test.shopservice.exception.CustomNotFoundException;
 import com.test.shopservice.service.SaleDetailService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,29 +15,12 @@ public class SaleDetailController {
 
     private final SaleDetailService service;
 
-    @GetMapping(value = {"/sale/{idSale}", "/client/{idClient}"})
-    public Mono<ResponseEntity<Object[]>> getDetailBySale(@PathVariable Map<String, String> pathMap) {
+    @Operation(tags = "Servicio Detalle_Venta", summary = "Obtener Detalles de Venta por ID de venta.", description = "Obtiene los detalles de una venta, dado el Id de venta.")
+    @GetMapping(value = "/sale/{id}")
+    public Mono<ResponseEntity<Object[]>> getDetailBySale(@PathVariable("id") Integer id) {
 
-        Mono<Object[]> detail = null;
+        Mono<Object[]> detail = this.service.findBySaleId(id);
 
-        Optional<String> obj = pathMap.keySet().stream().findAny();
-        String key = !obj.isEmpty() ? obj.get() : "";
-        Integer value = !obj.isEmpty() ? Integer.parseInt(obj.get()) : 0;
-
-        switch (key) {
-
-            case "idSale":
-                detail = this.service.findBySaleId(value);
-                break;
-
-            case "idClient":
-                detail = this.service.findByClientId(value);
-                break;
-
-            default:
-                break;
-
-        }
         if (detail == null) {
             throw new CustomNotFoundException("Id no existe");
         }
@@ -47,4 +28,15 @@ public class SaleDetailController {
         return detail.map(element -> ResponseEntity.ok(element));
     }
 
+    @Operation(tags = "Servicio Detalle_Venta", summary = "Obtener Detalles de Venta por ID de Cliente.", description = "Obtiene los detalles de venta de un Cliente.")
+    @GetMapping(value = "/client/{id}")
+    public Mono<ResponseEntity<Object[]>> getDetailByClient(@PathVariable("id") Integer id) {
+        Mono<Object[]> detail = this.service.findByClientId(id);
+
+        if (detail == null) {
+            throw new CustomNotFoundException("Id no existe");
+        }
+
+        return detail.map(element -> ResponseEntity.ok(element));
+    }
 }

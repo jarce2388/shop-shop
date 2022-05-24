@@ -5,6 +5,7 @@ import com.test.shopservice.entity.Client;
 import com.test.shopservice.exception.CustomBadRequestException;
 import com.test.shopservice.exception.CustomNotFoundException;
 import com.test.shopservice.service.ClientService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
@@ -35,6 +36,7 @@ public class ClientController {
         logger.error(msg);
     };
 
+    @Operation(tags = "Servicio Cliente", summary = "Obtener Cliente por ID.", description = "Obtiene los datos de un cliente correspondiente a un ID dado.")
     @GetMapping(value = "/{id}")
     public ResponseEntity<Client> getClient(@PathVariable("id") Integer id) {
 
@@ -49,12 +51,14 @@ public class ClientController {
         return ResponseEntity.ok(client);
     }
 
+    @Operation(tags = "Servicio Cliente", summary = "Listar Clientes.", description = "Obtiene una lista de todos los clientes.")
     @GetMapping
     public ResponseEntity<List<Client>> listCLient() {
 
         return ResponseEntity.ok(this.clientService.listProduct());
     }
 
+    @Operation(tags = "Servicio Cliente", summary = "Crear  Cliente.", description = "Registra un nuevo cliente .")
     @PostMapping
     public ResponseEntity<Client> createClient(@Valid @RequestBody ClientDto clientDto, BindingResult result) {
 

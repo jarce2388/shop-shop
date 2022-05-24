@@ -5,6 +5,7 @@ import com.test.shopservice.entity.SaleDetail;
 import com.test.shopservice.exception.CustomBadRequestException;
 import com.test.shopservice.exception.CustomNotFoundException;
 import com.test.shopservice.service.SaleService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,12 +34,14 @@ public class SaleController {
         logger.error(msg);
     };
 
+    @Operation(tags = "Servicio Venta", summary = "Listar Ventas.", description = "Lista Todas las Ventas existentes.")
     @GetMapping
     public ResponseEntity<List<SaleDto>> listSale() {
 
         return ResponseEntity.ok(this.saleService.listSale());
     }
 
+    @Operation(tags = "Servicio Venta", summary = "Obtener Ventas.", description = "Obtiene una Venta, dado su ID.")
     @GetMapping(value = "/{id}")
     public ResponseEntity<SaleDto> getSale(@PathVariable("id") Integer id) {
 
@@ -52,6 +55,7 @@ public class SaleController {
         return ResponseEntity.ok(sale);
     }
 
+    @Operation(tags = "Servicio Venta", summary = "Crear Venta.", description = "Crea una nueva Venta.")
     @PostMapping
     public ResponseEntity<List<SaleDetail>> createSale(@Valid @RequestBody SaleDto saleDto, BindingResult result) {
 

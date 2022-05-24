@@ -5,6 +5,7 @@ import com.test.shopservice.entity.Product;
 import com.test.shopservice.exception.CustomBadRequestException;
 import com.test.shopservice.exception.CustomNotFoundException;
 import com.test.shopservice.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
@@ -36,6 +37,7 @@ public class ProductController {
         logger.error(msg);
     };
 
+    @Operation(tags = "Servicio Producto", summary = "Listar Producto.", description = "Lista Todos los productos existentes.")
     @GetMapping
     public ResponseEntity<List<Product>> listProduct() {
 
@@ -49,6 +51,7 @@ public class ProductController {
         return ResponseEntity.ok(listProduct);
     }
 
+    @Operation(tags = "Servicio Producto", summary = "Obtener Producto.", description = "Devuelve un Producto dado un Id válido.")
     @GetMapping(value = "/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable("id") Integer id) {
 
@@ -62,6 +65,7 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
+    @Operation(tags = "Servicio Producto", summary = "Crear Producto.", description = "Crea un nuevo Producto.")
     @PostMapping
     public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDto productDto, BindingResult result) {
 
@@ -74,8 +78,8 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
     }
 
+    @Operation(tags = "Servicio Producto", summary = "Actualizar Producto.", description = "Actualiza un Producto dado su Id.")
     @PutMapping(value = "/{id}")
-
     public ResponseEntity<Product> updateProduct(@PathVariable("id") Integer id, @Valid @RequestBody ProductDto productDto, BindingResult result) {
 
         if (result.hasErrors()) {
@@ -94,6 +98,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(updProduct);
     }
 
+    @Operation(tags = "Servicio Producto", summary = "Eliminar Producto.", description = "Elimina un Producto dado su Id.")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Integer id) {
 
