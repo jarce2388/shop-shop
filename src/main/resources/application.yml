@@ -2,6 +2,7 @@ server:
   port: 8000
   error:
     include-message: always
+
 spring:
   application:
     name: shop-service
@@ -19,4 +20,17 @@ spring:
     properties:
       hibernate:
         default_schema: shop
+
+keycloak:
+  auth-server-url: http://localhost:8080/auth/
+  realm: shop-admin
+  resource: shop-client
+  securityConstraints:
+    - authRoles: [ app-admin, app-member ]
+      securityCollections:
+        - name: API
+          patterns: [ '/*' ]
+  credentials:
+    secret: DHoLwwp23jGXqP8KiGfLHvBbFnZcMZqF
+
 
