@@ -16,23 +16,20 @@ public class SaleDetailController {
     private final SaleDetailService service;
 
     @Operation(tags = "Servicio Detalle_Venta", summary = "Obtener Detalles de Venta por ID de venta.", description = "Obtiene los detalles de una venta, dado el Id de venta.")
-    @GetMapping(value = "/sale/{id}")
     public Mono<ResponseEntity<Object[]>> getDetailBySale(@PathVariable("id") Integer id) {
 
         Mono<Object[]> detail = this.service.findBySaleId(id);
-
         if (detail == null) {
             throw new CustomNotFoundException("Id no existe");
         }
-
         return detail.map(element -> ResponseEntity.ok(element));
     }
 
-    @Operation(tags = "Servicio Detalle_Venta", summary = "Obtener Detalles de Venta por ID de Cliente.", description = "Obtiene los detalles de venta de un Cliente.")
     @GetMapping(value = "/client/{id}")
+    @Operation(tags = "Servicio Detalle_Venta", summary = "Obtener Detalles de Venta por ID de Cliente.", description = "Obtiene los detalles de venta de un Cliente.")
     public Mono<ResponseEntity<Object[]>> getDetailByClient(@PathVariable("id") Integer id) {
-        Mono<Object[]> detail = this.service.findByClientId(id);
 
+        Mono<Object[]> detail = this.service.findByClientId(id);
         if (detail == null) {
             throw new CustomNotFoundException("Id no existe");
         }

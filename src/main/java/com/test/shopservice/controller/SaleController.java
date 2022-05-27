@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,19 +35,17 @@ public class SaleController {
         logger.error(msg);
     };
 
-    @Operation(tags = "Servicio Venta", summary = "Listar Ventas.", description = "Lista Todas las Ventas existentes.")
     @GetMapping
+    @Operation(tags = "Servicio Venta", summary = "Listar Ventas.", description = "Lista Todas las Ventas existentes.")
     public ResponseEntity<List<SaleDto>> listSale() {
-
         return ResponseEntity.ok(this.saleService.listSale());
     }
 
-    @Operation(tags = "Servicio Venta", summary = "Obtener Ventas.", description = "Obtiene una Venta, dado su ID.")
     @GetMapping(value = "/{id}")
+    @Operation(tags = "Servicio Venta", summary = "Obtener Ventas.", description = "Obtiene una Venta, dado su ID.")
     public ResponseEntity<SaleDto> getSale(@PathVariable("id") Integer id) {
 
         SaleDto sale = this.saleService.getSale(id);
-
         if (sale == null) {
             errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.GET, "Id no existe");
             throw new CustomNotFoundException("Id no existe");
@@ -55,8 +54,9 @@ public class SaleController {
         return ResponseEntity.ok(sale);
     }
 
-    @Operation(tags = "Servicio Venta", summary = "Crear Venta.", description = "Crea una nueva Venta.")
     @PostMapping
+    @PreAuthorize("hasRole('app-admin')")
+    @Operation(tags = "Servicio Venta", summary = "Crear Venta.", description = "Crea una nueva Venta.")
     public ResponseEntity<List<SaleDetail>> createSale(@Valid @RequestBody SaleDto saleDto, BindingResult result) {
 
         if (result.hasErrors()) {

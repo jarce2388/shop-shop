@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,14 +37,18 @@ public class ClientController {
         logger.error(msg);
     };
 
-    @Operation(tags = "Servicio Cliente", summary = "Obtener Cliente por ID.", description = "Obtiene los datos de un cliente correspondiente a un ID dado.")
+    @GetMapping
+    @Operation(tags = "Servicio Cliente", summary = "Listar Clientes.", description = "Obtiene una lista de todos los clientes.")
+    public ResponseEntity<List<Client>> listCLient() {
+        return ResponseEntity.ok(this.clientService.listProduct());
+    }
+
     @GetMapping(value = "/{id}")
+    @Operation(tags = "Servicio Cliente", summary = "Obtener Cliente por ID.", description = "Obtiene los datos de un cliente correspondiente a un ID dado.")
     public ResponseEntity<Client> getClient(@PathVariable("id") Integer id) {
 
         Client client = this.clientService.getClient(id);
-
         if (client == null) {
-
             errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.GET, "Cliente no encontrado");
             throw new CustomNotFoundException("Cliente no encontrado");
         }
@@ -51,25 +56,17 @@ public class ClientController {
         return ResponseEntity.ok(client);
     }
 
-    @Operation(tags = "Servicio Cliente", summary = "Listar Clientes.", description = "Obtiene una lista de todos los clientes.")
-    @GetMapping
-    public ResponseEntity<List<Client>> listCLient() {
-
-        return ResponseEntity.ok(this.clientService.listProduct());
-    }
-
-    @Operation(tags = "Servicio Cliente", summary = "Crear  Cliente.", description = "Registra un nuevo cliente .")
     @PostMapping
+    @PreAuthorize("hasRole('app-admin')")
+    @Operation(tags = "Servicio Cliente", summary = "Crear  Cliente.", description = "Registra un nuevo cliente .")
     public ResponseEntity<Client> createClient(@Valid @RequestBody ClientDto clientDto, BindingResult result) {
 
         if (result.hasErrors()) {
-
             errorLog.register(HttpStatus.BAD_REQUEST, HttpMethod.POST, this.toStringMessage(result));
             throw new CustomBadRequestException(this.toStringMessage(result));
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(this.clientService.createClient(clientDto));
-
     }
 
     private String toStringMessage(BindingResult result) {
@@ -83,5 +80,4 @@ public class ClientController {
 
         return errors.toString();
     }
-
 }
