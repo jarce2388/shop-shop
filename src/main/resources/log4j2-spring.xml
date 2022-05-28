@@ -27,6 +27,14 @@
             </PatternLayout>
             <JSONLayout compact="true" eventEol="true"/>
         </File>
+        <File name="security-log" fileName="${basePath}/security.log">
+            <PatternLayout>
+                <pattern>
+                    %d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %c{1}  : %msg%n
+                </pattern>
+            </PatternLayout>
+            <JSONLayout compact="true" eventEol="true"/>
+        </File>
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout>
                 <pattern>
@@ -44,6 +52,9 @@
         </Logger>
         <Logger name="sale-log" level="ERROR" additivity="false">
             <appender-ref ref="sale-log"/>
+        </Logger>
+        <Logger name="security-log" additivity="false">
+            <appender-ref ref="security-log"/>
         </Logger>
         <Root level="INFO" additivity="false">
             <AppenderRef ref="console"/>

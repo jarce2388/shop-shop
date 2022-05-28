@@ -4,6 +4,7 @@ import com.test.shopservice.dto.ProductDto;
 import com.test.shopservice.entity.Product;
 import com.test.shopservice.exception.CustomBadRequestException;
 import com.test.shopservice.exception.CustomNotFoundException;
+import com.test.shopservice.log.ErrorLog;
 import com.test.shopservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

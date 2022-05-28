@@ -22,11 +22,10 @@ spring:
         default_schema: shop
   main:
     allow-circular-references: true
+
 keycloak:
   auth-server-url: http://localhost:8080/auth/
   realm: shop-admin
   resource: shop-client
   credentials:
     secret: DHoLwwp23jGXqP8KiGfLHvBbFnZcMZqF
-
-

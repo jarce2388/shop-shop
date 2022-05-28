@@ -5,8 +5,11 @@ import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.audit.listener.AbstractAuditListener;
+import org.springframework.boot.actuate.security.AuthorizationAuditListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,16 +22,16 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
-public class KeycloakSecurityConfig  extends KeycloakWebSecurityConfigurerAdapter {
+public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/clients/**").hasAnyRole("app-admin","app-member")
-                .antMatchers("/products/**").hasAnyRole("app-admin","app-member")
-                .antMatchers("/sales/**").hasAnyRole("app-admin","app-member")
+                .antMatchers("/clients/**").hasAnyRole("app-admin", "app-member")
+                .antMatchers("/products/**").hasAnyRole("app-admin", "app-member")
+                .antMatchers("/sales/**").hasAnyRole("app-admin", "app-member")
                 .anyRequest()
                 .permitAll();
         http.csrf().disable();
@@ -51,4 +54,5 @@ public class KeycloakSecurityConfig  extends KeycloakWebSecurityConfigurerAdapte
     public KeycloakConfigResolver keycloakConfigResolver() {
         return new KeycloakSpringBootConfigResolver();
     }
+
 }
