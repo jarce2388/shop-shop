@@ -8,8 +8,7 @@ import com.test.shopservice.log.ErrorLog;
 import com.test.shopservice.service.SaleService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,38 +29,38 @@ public class SaleController {
 
     private final SaleService saleService;
 
-    private final ErrorLog errorLog = (httpStatus, httpMethod, message) -> {
-        String msg = httpMethod.name() + " : " + httpStatus.name() + " : " + httpStatus.value() + " : " + message;
-        Logger logger = LogManager.getLogger("sale-log");
-        logger.error(msg);
-    };
+    @Autowired
+    private  ErrorLog errorLog;
 
+    @Operation(tags = "Servicio Venta", summary = "Listar Ventas.",
+                description = "Lista Todas las Ventas existentes.")
     @GetMapping
-    @Operation(tags = "Servicio Venta", summary = "Listar Ventas.", description = "Lista Todas las Ventas existentes.")
     public ResponseEntity<List<SaleDto>> listSale() {
         return ResponseEntity.ok(this.saleService.listSale());
     }
 
+    @Operation(tags = "Servicio Venta", summary = "Obtener Ventas.",
+                description = "Obtiene una Venta, dado su ID.")
     @GetMapping(value = "/{id}")
-    @Operation(tags = "Servicio Venta", summary = "Obtener Ventas.", description = "Obtiene una Venta, dado su ID.")
     public ResponseEntity<SaleDto> getSale(@PathVariable("id") Integer id) {
 
         SaleDto sale = this.saleService.getSale(id);
         if (sale == null) {
-            errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.GET, "Id no existe");
+            errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.GET, "Id no existe", "sale-log");
             throw new CustomNotFoundException("Id no existe");
         }
 
         return ResponseEntity.ok(sale);
     }
 
+    @PreAuthorize("hasRole('root')")
+    @Operation(tags = "Servicio Venta", summary = "Crear Venta.",
+                description = "Crea una nueva Venta.")
     @PostMapping
-    @PreAuthorize("hasRole('app-admin')")
-    @Operation(tags = "Servicio Venta", summary = "Crear Venta.", description = "Crea una nueva Venta.")
     public ResponseEntity<List<SaleDetail>> createSale(@Valid @RequestBody SaleDto saleDto, BindingResult result) {
 
         if (result.hasErrors()) {
-            errorLog.register(HttpStatus.BAD_REQUEST, HttpMethod.POST, this.toStringMessage(result));
+            errorLog.register(HttpStatus.BAD_REQUEST, HttpMethod.POST, this.toStringMessage(result), "sale-log");
             throw new CustomBadRequestException(this.toStringMessage(result));
         }
 

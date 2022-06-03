@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: 8200
   error:
     include-message: always
 
@@ -24,8 +24,8 @@ spring:
     allow-circular-references: true
 
 keycloak:
-  auth-server-url: http://localhost:8080/auth/
+  auth-server-url: http://localhost:8180/auth/
   realm: shop-admin
   resource: shop-client
   credentials:
-    secret: DHoLwwp23jGXqP8KiGfLHvBbFnZcMZqF
+    secret: JL5tZUYEG0X6ZyqFvyHdLfDybtAF41UA

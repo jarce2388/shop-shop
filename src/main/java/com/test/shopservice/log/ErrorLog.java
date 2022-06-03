@@ -4,5 +4,5 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 public interface ErrorLog {
-    public void register(HttpStatus httpStatus, HttpMethod httpMethod, String message);
+    public void register(HttpStatus httpStatus, HttpMethod httpMethod, String message, String fileName);
 }

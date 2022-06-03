@@ -31,7 +31,8 @@ public class ProductService {
 
     public Product createProduct(ProductDto productDto) {
 
-        return this.repository.save(modelMapper.map(productDto,Product.class));
+        Product product = modelMapper.map(productDto,Product.class);
+        return this.repository.save(product);
     }
 
     public Product updateProduct(ProductDto productDto) {

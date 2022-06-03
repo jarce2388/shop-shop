@@ -39,11 +39,11 @@ public class SaleService {
 
         Optional<Sale> sale = this.saleRepository.findById(id);
 
-        if(sale.isEmpty()){
+        if (sale.isEmpty()) {
             return null;
         }
 
-        return  this.toDto(sale.get());
+        return this.toDto(sale.get());
     }
 
     public List<SaleDetail> createSale(SaleDto salesDto) {
@@ -69,7 +69,7 @@ public class SaleService {
         SaleDto saleDto = modelMapper.map(sale, SaleDto.class);
         List<SaleDetailDto> saleDetailDto = sale.getDetailList()
                 .stream()
-                .map(element ->{
+                .map(element -> {
                     SaleDetailDto detailDto = modelMapper.map(element, SaleDetailDto.class);
                     detailDto.setTotal(detailDto.getQuantity() * detailDto.getProduct().getPrice());
                     return detailDto;

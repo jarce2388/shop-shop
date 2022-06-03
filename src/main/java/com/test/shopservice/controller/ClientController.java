@@ -9,8 +9,7 @@ import com.test.shopservice.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,38 +31,36 @@ public class ClientController {
 
     private final ClientService clientService;
 
-    private final ErrorLog errorLog = (httpStatus, httpMethod, message) -> {
-        String msg = httpMethod.name() + " : " + httpStatus.name() + " : " + httpStatus.value() + " : " + message;
-        Logger logger = LogManager.getLogger("client-log");
-        logger.error(msg);
-    };
+    @Autowired
+    private ErrorLog errorLog;
 
-    @GetMapping
     @Operation(tags = "Servicio Cliente", summary = "Listar Clientes.", description = "Obtiene una lista de todos los clientes.")
+    @GetMapping
     public ResponseEntity<List<Client>> listCLient() {
         return ResponseEntity.ok(this.clientService.listProduct());
     }
 
-    @GetMapping(value = "/{id}")
     @Operation(tags = "Servicio Cliente", summary = "Obtener Cliente por ID.", description = "Obtiene los datos de un cliente correspondiente a un ID dado.")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Client> getClient(@PathVariable("id") Integer id) {
 
         Client client = this.clientService.getClient(id);
         if (client == null) {
-            errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.GET, "Cliente no encontrado");
+            errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.GET, "Cliente no encontrado","client-log");
             throw new CustomNotFoundException("Cliente no encontrado");
         }
 
         return ResponseEntity.ok(client);
     }
 
-    @PostMapping
-    @PreAuthorize("hasRole('app-admin')")
+
+    @PreAuthorize("hasRole('root')")
     @Operation(tags = "Servicio Cliente", summary = "Crear  Cliente.", description = "Registra un nuevo cliente .")
+    @PostMapping
     public ResponseEntity<Client> createClient(@Valid @RequestBody ClientDto clientDto, BindingResult result) {
 
         if (result.hasErrors()) {
-            errorLog.register(HttpStatus.BAD_REQUEST, HttpMethod.POST, this.toStringMessage(result));
+            errorLog.register(HttpStatus.BAD_REQUEST, HttpMethod.POST, this.toStringMessage(result),"client-log");
             throw new CustomBadRequestException(this.toStringMessage(result));
         }
 
