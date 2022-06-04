@@ -49,15 +49,21 @@ public class ClientController {
             @ApiResponse(responseCode = "200", description = "Cliente encontrado", content = {@Content}),
             @ApiResponse(responseCode = "400", description = "Cliente no encontrado", content = @Content),
             @ApiResponse(responseCode = "404", description = "Cliente no encontrado",
+<<<<<<< HEAD
                          content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Client.class))})})
     @Operation(tags = "Servicio Cliente", summary = "Obtener Cliente por ID.")
+=======
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorMessage.class))})})
+    @Operation(tags = "Servicio Cliente", summary = "Obtener Cliente por ID.", description = "Obtiene los datos de un cliente correspondiente a un ID dado.")
+>>>>>>> f2d5525df231b2002aff9c6b9f00499fe92fc9f0
     @GetMapping(value = "/{id}")
     public ResponseEntity<Client> getClient(@PathVariable("id") Integer id) {
 
         Client client = this.clientService.getClient(id);
         if (client == null) {
             errorLog.register(HttpStatus.NOT_FOUND, HttpMethod.GET, "Cliente no encontrado","client-log");
-            throw new CustomNotFoundException("Cliente no encontrado");
+//            throw new CustomNotFoundException("Cliente no encontrado");
         }
 
         return ResponseEntity.ok(client);
