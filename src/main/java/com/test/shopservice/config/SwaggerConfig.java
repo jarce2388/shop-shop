@@ -1,4 +1,4 @@
-package com.test.shopservice.context;
+package com.test.shopservice.config;
 
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;

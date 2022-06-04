@@ -4,9 +4,14 @@ import com.test.shopservice.dto.ClientDto;
 import com.test.shopservice.entity.Client;
 import com.test.shopservice.exception.CustomBadRequestException;
 import com.test.shopservice.exception.CustomNotFoundException;
+import com.test.shopservice.exception.ErrorMessage;
 import com.test.shopservice.log.ErrorLog;
 import com.test.shopservice.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +45,12 @@ public class ClientController {
         return ResponseEntity.ok(this.clientService.listProduct());
     }
 
-    @Operation(tags = "Servicio Cliente", summary = "Obtener Cliente por ID.", description = "Obtiene los datos de un cliente correspondiente a un ID dado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente encontrado", content = {@Content}),
+            @ApiResponse(responseCode = "400", description = "Cliente no encontrado", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Cliente no encontrado",
+                         content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Client.class))})})
+    @Operation(tags = "Servicio Cliente", summary = "Obtener Cliente por ID.")
     @GetMapping(value = "/{id}")
     public ResponseEntity<Client> getClient(@PathVariable("id") Integer id) {
 
