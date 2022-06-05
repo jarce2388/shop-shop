@@ -63,7 +63,7 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @PreAuthorize("hasRole('root')")
+//    @PreAuthorize("hasRole('root')")
     @Operation(tags = "Servicio Producto", summary = "Crear Producto.", description = "Crea un nuevo Producto.")
     @PostMapping
     public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDto productDto, BindingResult result) {
@@ -77,7 +77,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
     }
 
-    @PreAuthorize("hasRole('root')")
+//    @PreAuthorize("hasRole('root')")
     @Operation(tags = "Servicio Producto", summary = "Actualizar Producto.",
                 description = "Actualiza un Producto dado su Id.")
     @PutMapping(value = "/{id}")
@@ -97,7 +97,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(updProduct);
     }
 
-    @PreAuthorize("hasRole('root')")
+//    @PreAuthorize("hasRole('root')")
     @Operation(tags = "Servicio Producto", summary = "Eliminar Producto.",
                 description = "Elimina un Producto dado su Id.")
     @DeleteMapping(value = "/{id}")

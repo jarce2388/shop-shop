@@ -63,8 +63,7 @@ public class ClientController {
         return ResponseEntity.ok(client);
     }
 
-
-    @PreAuthorize("hasRole('root')")
+//    @PreAuthorize("hasRole('root')")
     @Operation(tags = "Servicio Cliente", summary = "Crear  Cliente.", description = "Registra un nuevo cliente .")
     @PostMapping
     public ResponseEntity<Client> createClient(@Valid @RequestBody ClientDto clientDto, BindingResult result) {
